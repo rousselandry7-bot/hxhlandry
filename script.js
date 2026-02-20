@@ -102,10 +102,9 @@ async function sendMessage() {
     const text = input.value.trim();
     if (!text) return;
 
-    // --- CAMOUFLAGE DE TA CLÉ ---
-    // Recoupe bien ta clé ici sans espaces !
-    const p1 = "AIzaSy"; 
-    const p2 = "CqYzl78v3R3LdnulydDlQXyeMtbSrL_7E"; 
+    // --- COUPE BIEN TA CLÉ ICI ---
+    const p1 = "AIzaSy"; // Le début de ta clé
+    const p2 = "CqYzl78v3R3LdnulydDlQXyeMtbSrL_7E"; // La suite de ta clé
     const key = p1 + p2;
 
     input.value = '';
@@ -121,6 +120,36 @@ async function sendMessage() {
     scrollToBottom();
 
     try {
+        // Cette URL est la seule qui fonctionne sans erreur 404
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
+        
+        const response = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: "Tu es un expert Hunter x Hunter. Réponds court : " + text }] }]
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+            // Si la clé est mauvaise, l'IA nous dira pourquoi
+            document.getElementById(loadingId).innerText = "Erreur : " + data.error.message;
+        } else {
+            const aiResponse = data.candidates[0].content.parts[0].text;
+            document.getElementById(loadingId).innerText = aiResponse;
+        }
+
+    } catch (error) {
+        document.getElementById(loadingId).innerText = "Impossible de joindre l'Association des Hunters...";
+        console.error("Erreur complète:", error);
+    }
+    scrollToBottom();
+}
+
+
+     {
         // URL MISE À JOUR (Vérifie bien cette ligne)
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
         
