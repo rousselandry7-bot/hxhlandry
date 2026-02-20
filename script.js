@@ -1,0 +1,193 @@
+const infos = {
+    nen: "<h2>Le Nen (念)</h2><br><p>Le Nen est une technique permettant de manipuler l'énergie vitale (aura). Il est essentiel pour tout Hunter professionnel.</p>",
+    fourmis: "<h2>Fourmis Chimères</h2><br><p>Des insectes mutants extrêmement dangereux venus du Continent Caché, capables d'absorber les gènes de leurs proies.</p>",
+    continent: "<h2>Le Continent Caché</h2><br><p>Un monde mystérieux situé au-delà des limites du monde connu, rempli de créatures gigantesques et de dangers mortels.</p>"
+};
+
+// --- VARIABLES DE L'EXAMEN ---
+let scoreHunter = 0;
+let questionActuelle = 0;
+
+const questionsExamen = [
+    { q: "Quel principe consiste à maintenir l'aura dans le corps ?", r: ["Ten", "Zetsu", "Ren", "Hatsu"], c: 0 },
+    { q: "Comment s'appelle le test du verre d'eau ?", r: ["Divination", "Méditation", "Lévitation", "Infusion"], c: 0 },
+    { q: "Quel est l'objectif de Gon ?", r: ["Devenir riche", "Venger son clan", "Trouver son père", "Tuer Hisoka"], c: 2 },
+    { q: "Le Nen de Kirua est de quel type ?", r: ["Renforcement", "Transformation", "Émission", "Spécialisation"], c: 1 },
+    { q: "Combien de membres compte l'Araignée ?", r: ["10", "12", "13", "15"], c: 2 },
+    { q: "Le Nen de Gon est de quel type ?", r: ["Renforcement", "Manipulation", "Matérialisation", "Émission"], c: 0 },
+    { q: "Comment s'appelle le Roi des Fourmis Chimères ?", r: ["Youpi", "Pitou", "Pouf", "Meruem"], c: 3 },
+    { q: "Quel est le futur métier de Léolio ?", r: ["Assassin", "Médecin", "Cuisinier", "Pilote"], c: 1 },
+    { q: "Où vit la famille Zoldyck ?", r: ["Mont Kukuru", "Île de la Baleine", "York Shin City", "NGL"], c: 0 },
+    { q: "Peut-on remplacer une licence Hunter perdue ?", r: ["Oui", "Non", "Seulement si on paye", "Une seule fois"], c: 1 }
+];
+
+// --- GESTION DES MODALES ---
+
+function ouvrirModal(type) {
+    const modalBody = document.getElementById('modal-body');
+    const container = document.getElementById('modal-container');
+    
+    if (infos[type]) {
+        modalBody.innerHTML = infos[type];
+    } 
+    else if (type === 'createur-carte') {
+        scoreHunter = 0;
+        questionActuelle = 0;
+        afficherQuestion();
+    }
+    container.style.display = 'flex';
+}
+
+function afficherQuestion() {
+    const modalBody = document.getElementById('modal-body');
+    const q = questionsExamen[questionActuelle];
+
+    modalBody.innerHTML = `
+        <h3 style="color:#d41414; margin-bottom:10px;">Examen Hunter - Question ${questionActuelle + 1}/10</h3>
+        <p style="margin-bottom:20px; font-weight:bold; font-size:18px;">${q.q}</p>
+        <div id="quiz-options" style="display:flex; flex-direction:column; gap:10px;">
+            ${q.r.map((rep, index) => `
+                <button class="btn-quiz" onclick="verifierReponse(${index})">${rep}</button>
+            `).join('')}
+        </div>
+        <p style="margin-top:15px; font-size:12px; color:#888;">Score actuel : ${scoreHunter}</p>
+    `;
+}
+
+function verifierReponse(indexChoisi) {
+    if (indexChoisi === questionsExamen[questionActuelle].c) {
+        scoreHunter++;
+    }
+    
+    questionActuelle++;
+
+    if (questionActuelle < questionsExamen.length) {
+        afficherQuestion();
+    } else {
+        finirExamen();
+    }
+}
+
+function finirExamen() {
+    const modalBody = document.getElementById('modal-body');
+    
+    if (scoreHunter >= 7) {
+        modalBody.innerHTML = `
+            <h2 style="color:#2ecc71; margin-bottom:15px;">FÉLICITATIONS !</h2>
+            <p>Score : <b>${scoreHunter}/10</b>. Ton Nen est suffisant.</p>
+            <div id="form-final" style="text-align:center; margin-top:20px;">
+                <input type="text" id="nom-hunter" placeholder="Ton Nom" style="padding:10px; width:80%; margin:15px 0; border:2px solid #333; border-radius:5px;">
+                <p style="font-size:12px; color:#aaa;">Ajoute ta photo (optionnel) :</p>
+                <input type="file" id="photo-hunter" accept="image/*" style="margin-bottom:15px; font-size:12px;">
+                <br>
+                <button id="btn-submit-hunter" onclick="genererCarte()">Obtenir ma Licence</button>
+            </div>
+            <div id="resultat-carte"></div>
+        `;
+    } else {
+        modalBody.innerHTML = `
+            <h2 style="color:#d41414; margin-bottom:15px;">ÉCHEC...</h2>
+            <p>Score : <b>${scoreHunter}/10</b>. Tu n'es pas encore prêt.</p>
+            <p style="margin-top:10px;">Un Hunter doit maîtriser les bases du monde et du Nen.</p>
+            <button onclick="ouvrirModal('createur-carte')" style="margin-top:20px; background:#333; color:white;">Retenter l'Examen</button>
+        `;
+    }
+}
+
+function genererCarte() {
+    const nom = document.getElementById('nom-hunter').value || "Hunter Inconnu";
+    const nenAleatoire = ["Renforcement", "Transformation", "Matérialisation", "Émission", "Manipulation", "Spécialisation"];
+    const nenResultat = nenAleatoire[Math.floor(Math.random() * nenAleatoire.length)];
+    
+    const photoInput = document.getElementById('photo-hunter');
+    const resultat = document.getElementById('resultat-carte');
+    
+    document.getElementById('form-final').style.display = 'none';
+
+    let photoUrl = "https://via.placeholder.com/80x100?text=Hunter";
+
+    const afficherLicence = (imgUrl) => {
+        resultat.innerHTML = `
+            <div class="hunter-license">
+                <div class="license-top">
+                    <div class="photo-container">
+                        <img src="${imgUrl}" alt="Photo Hunter">
+                    </div>
+                    <div class="logo-white-box">
+                        <div class="logo-xx">XX</div>
+                        <div class="logo-red-diamond"></div>
+                    </div>
+                </div>
+                <div class="license-bottom">
+                    <div class="name-display-area">${nom}</div>
+                    <div class="nen-type-label">TYPE : ${nenResultat.toUpperCase()}</div>
+                </div>
+            </div>
+            <button class="btn-download-card" onclick="window.print()">📥 Imprimer ma Licence</button>
+        `;
+    };
+
+    if (photoInput.files && photoInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = (e) => afficherLicence(e.target.result);
+        reader.readAsDataURL(photoInput.files[0]);
+    } else {
+        afficherLicence(photoUrl);
+    }
+}
+
+function fermerModal() {
+    document.getElementById('modal-container').style.display = 'none';
+}
+
+// --- GESTION DU CHAT IA ---
+
+function toggleChat() {
+    const body = document.getElementById('chat-body');
+    body.style.display = (body.style.display === 'flex') ? 'none' : 'flex';
+    if(body.style.display === 'flex') scrollToBottom();
+}
+
+function scrollToBottom() {
+    const messages = document.getElementById('messages');
+    if(messages) messages.scrollTop = messages.scrollHeight;
+}
+
+function appendMessage(text, isUser) {
+    const messages = document.getElementById('messages');
+    const msgDiv = document.createElement('div');
+    msgDiv.className = `message ${isUser ? 'user-message' : 'ai-message'}`;
+    msgDiv.textContent = text;
+    messages.appendChild(msgDiv);
+    scrollToBottom();
+}
+
+function sendMessage() {
+    const input = document.getElementById('user-input');
+    const text = input.value.trim();
+    if (!text) return;
+
+    input.value = '';
+    appendMessage(text, true);
+
+    setTimeout(() => {
+        let reponse = "En tant qu'examinateur, je sens une aura intéressante. Pose-moi une question plus précise sur le Nen !";
+        if(text.toLowerCase().includes("bonjour")) reponse = "Bonjour futur Hunter ! Prêt pour l'examen ?";
+        if(text.toLowerCase().includes("nen")) reponse = "Le Nen est composé de 4 principes : Ten, Zetsu, Ren et Hatsu.";
+        if(text.toLowerCase().includes("gon")) reponse = "Gon est un Hunter de type Renforcement, très déterminé !";
+        appendMessage(reponse, false);
+    }, 800);
+}
+
+// Gestion de la musique
+function toggleMusic() {
+    const audio = document.getElementById('hxh-audio');
+    const btn = document.getElementById('music-btn');
+    if (audio.paused) {
+        audio.play().catch(e => console.log("L'audio doit être activé par l'utilisateur d'abord."));
+        btn.innerText = "Pause";
+    } else {
+        audio.pause();
+        btn.innerText = "Lecture";
+    }
+}

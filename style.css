@@ -1,0 +1,391 @@
+/* =========================================
+   1. RESET & BASE
+   ========================================= */
+* {
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #000;
+    color: white;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+/* =========================================
+   2. LECTEUR DE MUSIQUE (FLOTTANT)
+   ========================================= */
+.music-player {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 10px 15px;
+    border-radius: 50px;
+    border: 1px solid rgba(212, 20, 20, 0.6);
+    z-index: 5000; /* Au-dessus de tout */
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+.music-player p {
+    font-size: 12px;
+    font-weight: bold;
+    color: #fff;
+    margin: 0;
+}
+
+#music-btn {
+    background: #d41414;
+    color: white;
+    border: none;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: 0.3s;
+    box-shadow: none; /* On retire l'ombre du bouton standard ici */
+}
+
+#music-btn:hover {
+    background: #ff0000;
+    transform: scale(1.05);
+}
+
+/* =========================================
+   3. SECTION HERO (GIF DE FOND)
+   ========================================= */
+.hero-section {
+    background-image: url('gif1.gif');
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    display: flex;
+    align-items: center;
+    padding-left: 10%;
+    /* L'overlay permet de mieux lire le texte par-dessus le GIF */
+    background-color: rgba(0, 0, 0, 0.3);
+    background-blend-mode: overlay;
+}
+
+.content h1 {
+    font-size: clamp(2.5rem, 8vw, 4rem);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    padding: 15px 30px;
+    border-radius: 10px;
+    display: inline-block;
+    border-left: 5px solid #d41414;
+}
+
+.content p {
+    margin-bottom: 30px;
+    font-size: 1.2rem;
+    max-width: 500px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+}
+
+/* =========================================
+   4. BOUTONS STYLE "JEU VIDEO"
+   ========================================= */
+.button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+button {
+    padding: 12px 24px;
+    font-family: 'Arial Black', sans-serif;
+    font-size: 13px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: 2px solid #333;
+    border-radius: 5px;
+    background: #fff;
+    color: #333;
+    transition: all 0.2s ease;
+    box-shadow: 4px 4px 0px #333;
+    outline: none;
+}
+
+button:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px #d41414;
+}
+
+button:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0px #333;
+}
+
+/* Bouton spécial pour la carte */
+.btn-hunter-card {
+    background: #d41414 !important;
+    color: white !important;
+    border-color: #fff !important;
+    box-shadow: 4px 4px 0px #2a52be !important;
+}
+
+/* Boutons liens (Wiki) */
+.btn-redir {
+    text-decoration: none;
+    padding: 12px 24px;
+    font-family: 'Arial Black', sans-serif;
+    font-size: 13px;
+    text-transform: uppercase;
+    border-radius: 5px;
+    background: #333;
+    color: white;
+    box-shadow: 4px 4px 0px #555;
+    transition: 0.3s;
+}
+
+.btn-redir:hover {
+    filter: brightness(1.2);
+    box-shadow: 6px 6px 0px #d41414;
+}
+
+/* =========================================
+   5. MODALES
+   ========================================= */
+.modal-overlay {
+    position: fixed; 
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85); 
+    display: none;
+    justify-content: center; 
+    align-items: center; 
+    z-index: 6000;
+}
+
+.modal-content {
+    background: #1a1a1a; 
+    padding: 30px; 
+    border-radius: 15px;
+    max-width: 500px; 
+    width: 90%; 
+    position: relative;
+    border: 2px solid #333;
+    animation: zoom 0.3s ease-out;
+    text-align: center;
+}
+
+@keyframes zoom { 
+    from { transform: scale(0.8); opacity: 0; } 
+    to { transform: scale(1); opacity: 1; } 
+}
+
+.close-btn { 
+    position: absolute; 
+    top: 10px; right: 20px; 
+    font-size: 30px; 
+    cursor: pointer; 
+    color: #888;
+}
+
+.close-btn:hover { color: white; }
+
+/* =========================================
+   6. SUPPORT CHAT IA (CORRECTIONS)
+   ========================================= */
+.ai-chat {
+    position: fixed; 
+    bottom: 20px; 
+    right: 20px; 
+    width: 320px;
+    background: #1a1a1a; 
+    border: 2px solid #8a2be2;
+    border-radius: 15px; 
+    z-index: 4000; 
+    display: flex; 
+    flex-direction: column; 
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.chat-header { 
+    background: #8a2be2; 
+    padding: 12px; 
+    font-weight: bold; 
+    text-align: center; 
+    cursor: pointer; 
+    font-size: 14px;
+}
+
+.chat-body { 
+    display: none; 
+    flex-direction: column; 
+    height: 350px; 
+    background: #222; 
+}
+
+#messages { 
+    flex-grow: 1; 
+    overflow-y: auto; 
+    padding: 15px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 10px; 
+}
+
+/* Zone de saisie du chat bien alignée */
+.chat-input-container {
+    padding: 10px;
+    background: #111;
+    display: flex;
+    gap: 5px;
+}
+
+#user-input {
+    flex-grow: 1;
+    background: #333;
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 5px;
+    outline: none;
+}
+
+/* =========================================
+   7. DESIGN LICENCE HUNTER
+   ========================================= */
+.hunter-license {
+    width: 320px;
+    height: 200px;
+    background-color: #d7eef2;
+    border: 2px solid #000;
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 10px auto;
+    color: #333 !important;
+}
+
+.license-top {
+    height: 55%;
+    background-color: #4a4a4a;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-bottom: 3px solid #9fcad2;
+    padding: 5px;
+}
+
+.photo-container {
+    width: 75px;
+    height: 90px;
+    border: 1px solid #000;
+    background: #fff;
+}
+
+.photo-container img { width: 100%; height: 100%; object-fit: cover; }
+
+.logo-white-box {
+    width: 130px;
+    height: 90px;
+    background: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    border: 1px solid #000;
+}
+
+.logo-xx {
+    font-size: 70px;
+    font-weight: 900;
+    color: #333;
+    font-family: 'Times New Roman', serif;
+}
+
+.logo-red-diamond {
+    position: absolute;
+    width: 30px;
+    height: 42px;
+    background-color: #d41414;
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+
+.name-display-area {
+    background: white;
+    border: 1px solid #000;
+    width: 90%;
+    height: 25px;
+    margin: 10px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #000;
+}
+
+.nen-type-label {
+    font-size: 12px;
+    font-weight: bold;
+    color: #2a52be;
+    text-align: center;
+}
+/* Conteneur principal du Chat */
+.ai-chat {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 320px;
+    background: #1a1a1a;
+    border: 2px solid #8a2be2;
+    border-radius: 15px;
+    z-index: 5000;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Corps du chat (caché par défaut) */
+.chat-body {
+    display: none; /* Changé en 'flex' par le JS lors du clic */
+    flex-direction: column;
+    height: 350px;
+    background: #222;
+}
+
+/* Zone des messages */
+#messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* LA ZONE QUI BLOQUAIT SUR TES PHOTOS */
+.chat-input-container {
+    display: flex;
+    padding: 10px;
+    background: #111;
+    border-top: 1px solid #333;
+    gap: 5px;
+}
+
+#user-input {
+    flex-grow: 1;
+    background: #333;
+    border: 1px solid #444;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 5px;
+    outline: none;
+    font-size: 14px;
+}

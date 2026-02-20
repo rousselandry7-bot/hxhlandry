@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hunter X Hunter - Univers</title>
+
+    <link rel="stylesheet" href="style.css">
+
+
+</head>
+
+<body>
+
+    <div class="music-player">
+    <p>🎵 Ambiance Hunter</p>
+    <audio id="hxh-audio" loop>
+        <source src="music.mp3" type="audio/mpeg">
+        Ton navigateur ne supporte pas l'audio.
+    </audio>
+    <button onclick="toggleMusic()" id="music-btn">Lecture</button>
+
+</div>
+
+
+    <section class="hero-section">
+
+        <div class="content">
+
+            <h1>Hunter X Hunter</h1>
+
+            <p>Maîtrisez l'énergie du Nen et explorez les terres dangereuses des Fourmis Chimères.</p>
+
+           
+
+            <div class="button-group">
+    <button onclick="ouvrirModal('nen')">Le Nen</button>
+    <button onclick="ouvrirModal('fourmis')">Monde Chimère</button>
+    <button onclick="ouvrirModal('continent')">Continent Caché</button>
+
+    <a href="https://hunterxhunter.fandom.com/fr/wiki/Gon_Freecss" class="btn-redir aura-gon">Wiki Gon</a>
+    <a href="https://hunterxhunter.fandom.com/fr/wiki/Famille_Zoldik" class="btn-redir aura-killua">Famille Zoldyck</a>
+    <a href="https://hunterxhunter.fandom.com/fr/wiki/Kimera_Ants" class="btn-redir aura-hisoka">Fourmis Chimère</a>
+
+    <button onclick="ouvrirModal('createur-carte')" class="btn-hunter-card">💳 Créer ma Carte Hunter</button>
+</div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    
+
+
+
+    <div id="modal-container" class="modal-overlay" onclick="fermerModal()">
+
+        <div class="modal-content" onclick="event.stopPropagation()">
+
+            <span class="close-btn" onclick="fermerModal()">&times;</span>
+
+            <div id="modal-body">
+
+                </div>
+
+        </div>
+
+    </div>
+
+
+
+    <script src="script.js"></script>
+
+    <div id="ai-support" class="ai-chat">
+    <div class="chat-header" onclick="toggleChat()">
+        <span>💬 Support Nen IA</span>
+    </div>
+    <div id="chat-body" class="chat-body">
+        <div id="messages">
+            <p class="ai-info-text">Posez votre question sur l'examen Hunter...</p>
+        </div>
+        
+        <div class="chat-input-area">
+            <input type="text" id="user-input" placeholder="Écrivez ici..." onkeypress="if(event.key === 'Enter') sendMessage()">
+            <button onclick="sendMessage()" class="btn-send">OK</button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+</body>
+
+</html>
