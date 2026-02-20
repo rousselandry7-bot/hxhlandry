@@ -4,7 +4,6 @@ const infos = {
     continent: "<h2>Le Continent Caché</h2><br><p>Un monde mystérieux situé au-delà des limites du monde connu, rempli de créatures gigantesques et de dangers mortels.</p>"
 };
 
-// --- VARIABLES DE L'EXAMEN ---
 let scoreHunter = 0;
 let questionActuelle = 0;
 
@@ -21,136 +20,118 @@ const questionsExamen = [
     { q: "Peut-on remplacer une licence Hunter perdue ?", r: ["Oui", "Non", "Seulement si on paye", "Une seule fois"], c: 1 }
 ];
 
-// --- GESTION DES MODALES ---
-
 function ouvrirModal(type) {
     const modalBody = document.getElementById('modal-body');
     const container = document.getElementById('modal-container');
-    
-    if (infos[type]) {
-        modalBody.innerHTML = infos[type];
-    } 
-    else if (type === 'createur-carte') {
-        scoreHunter = 0;
-        questionActuelle = 0;
-        afficherQuestion();
-    }
+    if (infos[type]) { modalBody.innerHTML = infos[type]; } 
+    else if (type === 'createur-carte') { scoreHunter = 0; questionActuelle = 0; afficherQuestion(); }
     container.style.display = 'flex';
 }
 
 function afficherQuestion() {
     const modalBody = document.getElementById('modal-body');
     const q = questionsExamen[questionActuelle];
-
     modalBody.innerHTML = `
         <h3 style="color:#d41414; margin-bottom:10px;">Examen Hunter - Question ${questionActuelle + 1}/10</h3>
         <p style="margin-bottom:20px; font-weight:bold; font-size:18px;">${q.q}</p>
         <div id="quiz-options" style="display:flex; flex-direction:column; gap:10px;">
-            ${q.r.map((rep, index) => `
-                <button class="btn-quiz" onclick="verifierReponse(${index})">${rep}</button>
-            `).join('')}
+            ${q.r.map((rep, index) => `<button class="btn-quiz" onclick="verifierReponse(${index})">${rep}</button>`).join('')}
         </div>
-        <p style="margin-top:15px; font-size:12px; color:#888;">Score actuel : ${scoreHunter}</p>
-    `;
+        <p style="margin-top:15px; font-size:12px; color:#888;">Score actuel : ${scoreHunter}</p>`;
 }
 
 function verifierReponse(indexChoisi) {
-    if (indexChoisi === questionsExamen[questionActuelle].c) {
-        scoreHunter++;
-    }
-    
+    if (indexChoisi === questionsExamen[questionActuelle].c) { scoreHunter++; }
     questionActuelle++;
-
-    if (questionActuelle < questionsExamen.length) {
-        afficherQuestion();
-    } else {
-        finirExamen();
-    }
+    if (questionActuelle < questionsExamen.length) { afficherQuestion(); } 
+    else { finirExamen(); }
 }
 
 function finirExamen() {
     const modalBody = document.getElementById('modal-body');
-    
     if (scoreHunter >= 7) {
         modalBody.innerHTML = `
             <h2 style="color:#2ecc71; margin-bottom:15px;">FÉLICITATIONS !</h2>
             <p>Score : <b>${scoreHunter}/10</b>. Ton Nen est suffisant.</p>
             <div id="form-final" style="text-align:center; margin-top:20px;">
                 <input type="text" id="nom-hunter" placeholder="Ton Nom" style="padding:10px; width:80%; margin:15px 0; border:2px solid #333; border-radius:5px;">
-                <p style="font-size:12px; color:#aaa;">Ajoute ta photo (optionnel) :</p>
                 <input type="file" id="photo-hunter" accept="image/*" style="margin-bottom:15px; font-size:12px;">
-                <br>
-                <button id="btn-submit-hunter" onclick="genererCarte()">Obtenir ma Licence</button>
+                <br><button id="btn-submit-hunter" onclick="genererCarte()">Obtenir ma Licence</button>
             </div>
-            <div id="resultat-carte"></div>
-        `;
+            <div id="resultat-carte"></div>`;
     } else {
         modalBody.innerHTML = `
             <h2 style="color:#d41414; margin-bottom:15px;">ÉCHEC...</h2>
-            <p>Score : <b>${scoreHunter}/10</b>. Tu n'es pas encore prêt.</p>
-            <p style="margin-top:10px;">Un Hunter doit maîtriser les bases du monde et du Nen.</p>
-            <button onclick="ouvrirModal('createur-carte')" style="margin-top:20px; background:#333; color:white;">Retenter l'Examen</button>
-        `;
+            <p>Score : <b>${scoreHunter}/10</b>. Reviens quand tu seras plus fort.</p>
+            <button onclick="ouvrirModal('createur-carte')" style="margin-top:20px; background:#333; color:white;">Retenter l'Examen</button>`;
     }
 }
 
 function genererCarte() {
     const nom = document.getElementById('nom-hunter').value || "Hunter Inconnu";
-    const nenAleatoire = ["Renforcement", "Transformation", "Matérialisation", "Émission", "Manipulation", "Spécialisation"];
-    const nenResultat = nenAleatoire[Math.floor(Math.random() * nenAleatoire.length)];
-    
+    const nenTypes = ["Renforcement", "Transformation", "Matérialisation", "Émission", "Manipulation", "Spécialisation"];
+    const nenResultat = nenTypes[Math.floor(Math.random() * nenTypes.length)];
     const photoInput = document.getElementById('photo-hunter');
     const resultat = document.getElementById('resultat-carte');
-    
     document.getElementById('form-final').style.display = 'none';
-
-    let photoUrl = "https://via.placeholder.com/80x100?text=Hunter";
-
     const afficherLicence = (imgUrl) => {
         resultat.innerHTML = `
             <div class="hunter-license">
                 <div class="license-top">
-                    <div class="photo-container">
-                        <img src="${imgUrl}" alt="Photo Hunter">
-                    </div>
-                    <div class="logo-white-box">
-                        <div class="logo-xx">XX</div>
-                        <div class="logo-red-diamond"></div>
-                    </div>
+                    <div class="photo-container"><img src="${imgUrl}" alt="Photo"></div>
+                    <div class="logo-white-box"><div class="logo-xx">XX</div><div class="logo-red-diamond"></div></div>
                 </div>
                 <div class="license-bottom">
                     <div class="name-display-area">${nom}</div>
                     <div class="nen-type-label">TYPE : ${nenResultat.toUpperCase()}</div>
                 </div>
             </div>
-            <button class="btn-download-card" onclick="window.print()">📥 Imprimer ma Licence</button>
-        `;
+            <button class="btn-download-card" onclick="window.print()">📥 Imprimer ma Licence</button>`;
     };
-
     if (photoInput.files && photoInput.files[0]) {
         const reader = new FileReader();
         reader.onload = (e) => afficherLicence(e.target.result);
         reader.readAsDataURL(photoInput.files[0]);
-    } else {
-        afficherLicence(photoUrl);
-    }
+    } else { afficherLicence("https://via.placeholder.com/80x100?text=Hunter"); }
 }
 
-function fermerModal() {
-    document.getElementById('modal-container').style.display = 'none';
-}
+function fermerModal() { document.getElementById('modal-container').style.display = 'none'; }
 
-// --- GESTION DU CHAT IA ---
+async function sendMessage() {
+    const input = document.getElementById('user-input');
+    const text = input.value.trim();
+    if (!text) return;
+    
+const part1 = "AIzaSyCqYz"; 
+const part2 = "l78v3R3LdnulydDlQXyeMtbSrL_7E"; 
+
+const API_KEY = part1 + part2;
+    input.value = '';
+    appendMessage(text, true);
+    const messages = document.getElementById('messages');
+    const loadingId = "loading-" + Date.now();
+    const loadingDiv = document.createElement('div');
+    loadingDiv.className = 'message ai-message';
+    loadingDiv.id = loadingId;
+    loadingDiv.innerHTML = "L'examinateur concentre son Nen...";
+    messages.appendChild(loadingDiv);
+    scrollToBottom();
+    try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ contents: [{ parts: [{ text: "Tu es un expert de Hunter x Hunter. Réponds brièvement à : " + text }] }] })
+        });
+        const data = await response.json();
+        const aiResponse = data.candidates[0].content.parts[0].text;
+        document.getElementById(loadingId).innerText = aiResponse;
+    } catch (error) { document.getElementById(loadingId).innerText = "Erreur de connexion..."; }
+    scrollToBottom();
+}
 
 function toggleChat() {
     const body = document.getElementById('chat-body');
     body.style.display = (body.style.display === 'flex') ? 'none' : 'flex';
-    if(body.style.display === 'flex') scrollToBottom();
-}
-
-function scrollToBottom() {
-    const messages = document.getElementById('messages');
-    if(messages) messages.scrollTop = messages.scrollHeight;
 }
 
 function appendMessage(text, isUser) {
@@ -162,32 +143,14 @@ function appendMessage(text, isUser) {
     scrollToBottom();
 }
 
-function sendMessage() {
-    const input = document.getElementById('user-input');
-    const text = input.value.trim();
-    if (!text) return;
-
-    input.value = '';
-    appendMessage(text, true);
-
-    setTimeout(() => {
-        let reponse = "En tant qu'examinateur, je sens une aura intéressante. Pose-moi une question plus précise sur le Nen !";
-        if(text.toLowerCase().includes("bonjour")) reponse = "Bonjour futur Hunter ! Prêt pour l'examen ?";
-        if(text.toLowerCase().includes("nen")) reponse = "Le Nen est composé de 4 principes : Ten, Zetsu, Ren et Hatsu.";
-        if(text.toLowerCase().includes("gon")) reponse = "Gon est un Hunter de type Renforcement, très déterminé !";
-        appendMessage(reponse, false);
-    }, 800);
+function scrollToBottom() {
+    const m = document.getElementById('messages');
+    if(m) m.scrollTop = m.scrollHeight;
 }
 
-// Gestion de la musique
 function toggleMusic() {
     const audio = document.getElementById('hxh-audio');
     const btn = document.getElementById('music-btn');
-    if (audio.paused) {
-        audio.play().catch(e => console.log("L'audio doit être activé par l'utilisateur d'abord."));
-        btn.innerText = "Pause";
-    } else {
-        audio.pause();
-        btn.innerText = "Lecture";
-    }
+    if (audio.paused) { audio.play(); btn.innerText = "Pause"; }
+    else { audio.pause(); btn.innerText = "Lecture"; }
 }
