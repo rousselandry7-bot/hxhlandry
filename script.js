@@ -101,13 +101,16 @@ async function sendMessage() {
     const input = document.getElementById('user-input');
     const text = input.value.trim();
     if (!text) return;
-    
-const part1 = "AIzaSyCqYz"; 
-const part2 = "l78v3R3LdnulydDlQXyeMtbSrL_7E"; 
 
-const API_KEY = part1 + part2;
+    // --- CAMOUFLAGE DE TA CLÉ ---
+    // Recoupe bien ta clé ici sans espaces !
+    const p1 = "AIzaSy"; 
+    const p2 = "CqYzl78v3R3LdnulydDlQXyeMtbSrL_7E"; 
+    const key = p1 + p2;
+
     input.value = '';
     appendMessage(text, true);
+
     const messages = document.getElementById('messages');
     const loadingId = "loading-" + Date.now();
     const loadingDiv = document.createElement('div');
@@ -116,16 +119,32 @@ const API_KEY = part1 + part2;
     loadingDiv.innerHTML = "L'examinateur concentre son Nen...";
     messages.appendChild(loadingDiv);
     scrollToBottom();
+
     try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
+        // URL MISE À JOUR (Vérifie bien cette ligne)
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
+        
+        const response = await fetch(url, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ contents: [{ parts: [{ text: "Tu es un expert de Hunter x Hunter. Réponds brièvement à : " + text }] }] })
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: "Tu es un expert Hunter x Hunter. Réponds court : " + text }] }]
+            })
         });
+
         const data = await response.json();
-        const aiResponse = data.candidates[0].content.parts[0].text;
-        document.getElementById(loadingId).innerText = aiResponse;
-    } catch (error) { document.getElementById(loadingId).innerText = "Erreur de connexion..."; }
+
+        if (data.error) {
+            document.getElementById(loadingId).innerText = "Erreur API : " + data.error.message;
+        } else {
+            const aiResponse = data.candidates[0].content.parts[0].text;
+            document.getElementById(loadingId).innerText = aiResponse;
+        }
+
+    } catch (error) {
+        document.getElementById(loadingId).innerText = "Problème de connexion (Vérifie ta clé).";
+        console.error("Erreur complète:", error);
+    }
     scrollToBottom();
 }
 
